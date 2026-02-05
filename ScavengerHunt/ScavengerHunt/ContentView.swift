@@ -1,21 +1,38 @@
-//
-//  ContentView.swift
-//  ScavengerHunt
-//
-//  Created by Nishan Narain on 2/4/26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var store = TaskStore()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List {
+                ForEach(store.tasks) { task in
+                    NavigationLink {
+                        TaskDetailView(taskID: task.id)
+                            .environmentObject(store)
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(task.title)
+                                    .font(.headline)
+                                Text(task.details)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            if task.isCompleted {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                            }
+                        }
+                        .padding(.vertical, 6)
+                    }
+                }
+            }
+            .navigationTitle("Scavenger Hunt")
         }
-        .padding()
     }
 }
 
